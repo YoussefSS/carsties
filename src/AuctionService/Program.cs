@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AuctionDbContext>(opt =>
     // These are the DbContextOptions passed in to the AuctionDbContext constructor
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // looks for any classes that derive from the Profile automapper class
 
 var app = builder.Build();
 
