@@ -1,7 +1,15 @@
+using AuctionService.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddDbContext<AuctionDbContext>(opt =>
+{
+    // These are the DbContextOptions passed in to the AuctionDbContext constructor
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 
