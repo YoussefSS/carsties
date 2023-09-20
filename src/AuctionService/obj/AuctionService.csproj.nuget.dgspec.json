@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj": {}
+    "D:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj": {}
   },
   "projects": {
-    "d:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj": {
+    "D:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj",
+        "projectUniqueName": "D:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj",
         "projectName": "AuctionService",
-        "projectPath": "d:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj",
+        "projectPath": "D:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\AuctionService.csproj",
         "packagesPath": "C:\\Users\\Youssef\\.nuget\\packages\\",
-        "outputPath": "d:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\obj\\",
+        "outputPath": "D:\\Workspaces\\WebDev\\carsties\\Carsties\\src\\AuctionService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Youssef\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,16 +40,6 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "dependencies": {
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[7.0.9, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.5.0, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
