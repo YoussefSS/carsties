@@ -6,7 +6,7 @@ services:
     ports:
       - 5432:5432 # port to access this service from outside of docker : port to access this service from inside docker
     volumes:  # since this is a database, we need to tell it to persist data in a volume on our pc
-      - pgdata:/var/lib/postgresql/data 
+      - /var/lib/postgresql/data 
   mongo:
     image: mongo
     environment:
@@ -15,7 +15,4 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongodata:/var/lib/mongodb/data # named volume
-volumes:
-  pgdata:
-  mongodata:
+      - /var/lib/mongodb/data # named volume
