@@ -14,6 +14,14 @@ builder.Services.AddDbContext<AuctionDbContext>(opt =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // looks for any classes that derive from the Profile automapper class
 builder.Services.AddMassTransit(x =>
 {
+    x.AddEntityFrameworkOutbox<AuctionDbContext>(o =>
+    {
+        o.QueryDelay = TimeSpan.FromSeconds(10); // Every 10 seconds, check if there's something in our outbox and try to deliver it.
+
+        o.UsePostgres();
+        o.UseBusOutbox();
+    });
+
     x.UsingRabbitMq((context, config) =>
     {
         config.ConfigureEndpoints(context);

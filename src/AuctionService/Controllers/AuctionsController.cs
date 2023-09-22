@@ -63,14 +63,15 @@ public class AuctionsController : ControllerBase
         // Tracking the .Add change in memory
         _context.Auctions.Add(auction);
 
-        // Saving the tracked changes to our database.
-        // SaveChangesAsync returns the number of changes that were made
-        var result = await _context.SaveChangesAsync() > 0;
-
         var newAuction = _mapper.Map<AuctionDto>(auction);
 
         // Publishing an AuctionCreated event to the message queue
+        // Important to do this before calling .SaveChangesAsync as the outbox is part of our entity framework transaction
         await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
+
+        // Saving the tracked changes to our database.
+        // SaveChangesAsync returns the number of changes that were made
+        var result = await _context.SaveChangesAsync() > 0;
 
         if (!result) return BadRequest("Could not save changes to the DB");
 
