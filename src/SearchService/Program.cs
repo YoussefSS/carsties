@@ -11,9 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpClient<AuctionSvcHttpClient>().AddPolicyHandler(GetPolicy());
 builder.Services.AddMassTransit(x =>
 {
+    // Any other consumers added from the same namespace as this class will be registered to MassTransit
+    x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
+
+    // Kebab case example: search-auction-created
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
+
     x.UsingRabbitMq((context, config) =>
     {
         config.ConfigureEndpoints(context);
