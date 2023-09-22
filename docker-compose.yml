@@ -16,3 +16,8 @@ services:
       - 27017:27017
     volumes:
       - /var/lib/mongodb/data # named volume
+  rabbitmq: 
+    image: rabbitmq:3-management-alpine # comes with the message broken and manager utility
+    ports:
+      - 5672:5672 # rabbitMQ port
+      - 15672:15672 # management service port, there's also authentication but we'll use guest:guest for now
