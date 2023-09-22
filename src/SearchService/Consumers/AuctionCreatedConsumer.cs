@@ -22,6 +22,9 @@ public class AuctionCreatedConsumer : IConsumer<AuctionCreated>
 
         var item = _mapper.Map<Item>(context.Message);
 
+        // Just an example to generate an exception and see how it's handled in the error queue
+        if (item.Model == "Foo") throw new ArgumentException("Cannot sell cars with name of Foo");
+
         // throws an exception if the save is not successful
         await item.SaveAsync();
     }
