@@ -3,6 +3,8 @@ using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +16,14 @@ public class AuctionsController : ControllerBase
 {
     private readonly AuctionDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     // Here we can inject services
-    public AuctionsController(AuctionDbContext context, IMapper mapper)
+    public AuctionsController(AuctionDbContext context, IMapper mapper, IPublishEndpoint publishEndpoint)
     {
         _context = context;
         _mapper = mapper;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -63,13 +67,18 @@ public class AuctionsController : ControllerBase
         // SaveChangesAsync returns the number of changes that were made
         var result = await _context.SaveChangesAsync() > 0;
 
+        var newAuction = _mapper.Map<AuctionDto>(auction);
+
+        // Publishing an AuctionCreated event to the message queue
+        await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
+
         if (!result) return BadRequest("Could not save changes to the DB");
 
         // 201 created resource
         // GetAuctionById is where this resource can be found. 
         // auction.Id is the Guid we can use with the GetAuctionById method
         // The third parameter is what we'll actually return
-        return CreatedAtAction(nameof(GetAuctionById), new { auction.Id }, _mapper.Map<AuctionDto>(auction));
+        return CreatedAtAction(nameof(GetAuctionById), new { auction.Id }, newAuction);
     }
 
     [HttpPut("{id}")]
