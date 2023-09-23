@@ -14,39 +14,25 @@ public static class Config
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
-            new ApiScope("scope1"),
-            new ApiScope("scope2"),
+            new ApiScope("auctionApp", "Auction app full access"),
         };
+
 
     public static IEnumerable<Client> Clients =>
         new Client[]
         {
-            // m2m client credentials flow client
+            // This is how we give tokens. We use openId which gives us 2 tokens, one is the ID token and the other is the access token
+            // The ID token contains information about the user
+            // The access token is the key that allows our client to request resources from our resource server (auction service)
+            // Note that this config is just for development, so don't worry about the lack of security.
             new Client
             {
-                ClientId = "m2m.client",
-                ClientName = "Client Credentials Client",
-
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-
-                AllowedScopes = { "scope1" }
-            },
-
-            // interactive client using code flow + pkce
-            new Client
-            {
-                ClientId = "interactive",
-                ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
-
-                AllowedGrantTypes = GrantTypes.Code,
-
-                RedirectUris = { "https://localhost:44300/signin-oidc" },
-                FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
-                PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
-
-                AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "scope2" }
-            },
+                ClientId = "postman",
+                ClientName = "Postman",
+                AllowedScopes = {"openid", "profile", "auctionApp"}, // these are the resources defined above. We want this returned to the client in a token
+                RedirectUris = {"https://www.getpostman.com/oauth2/callback"}, // this won't do anything in postman
+                ClientSecrets = new[] {new Secret("NotASecret".Sha256())}, // the client secret we'll use in postman
+                AllowedGrantTypes = {GrantType.ResourceOwnerPassword} // authentication flow
+            }
         };
 }
