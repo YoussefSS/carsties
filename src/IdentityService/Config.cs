@@ -33,6 +33,18 @@ public static class Config
                 RedirectUris = {"https://www.getpostman.com/oauth2/callback"}, // this won't do anything in postman
                 ClientSecrets = new[] {new Secret("NotASecret".Sha256())}, // the client secret we'll use in postman
                 AllowedGrantTypes = {GrantType.ResourceOwnerPassword} // authentication flow
+            },
+            new Client
+            {
+                ClientId = "nextApp",
+                ClientName = "nextApp",
+                ClientSecrets = new[] {new Secret("secret".Sha256())}, // don't worry about the unsecure secret, this is just for development
+                AllowedGrantTypes = GrantTypes.CodeAndClientCredentials, // our client can securely talk internally to identityserver and be issued with an access token, without the browsers involvement
+                RequirePkce = false, // this is ok as this isn't a mobile app
+                RedirectUris = {"http://localhost:3000/api/auth/callback/id-server"},
+                AllowOfflineAccess = true, // so that we can enable refresh token functionality
+                AllowedScopes = {"openid", "profile", "auctionApp"},
+                AccessTokenLifetime = 3600*24*30 // default is 3600 (1hr), we'll make it a month for development purposes
             }
         };
 }
