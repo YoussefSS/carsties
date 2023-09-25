@@ -21,3 +21,19 @@ services:
     ports:
       - 5672:5672 # rabbitMQ port
       - 15672:15672 # management service port, there's also authentication but we'll use guest:guest for now
+  auction-svc:
+    image: youssefhosny98/auction-svc:latest # latest is the latest tag we've built
+    build: 
+      context: . # which context this should run in. Period means inside the Carsties directory
+      dockerfile: src/AuctionService/Dockerfile
+    environment: # environment variables. These will override ALL of our appsettings/appsettings.Development.json variables
+      - ASPNETCORE_ENVIRONMENT=Development # run in development instead of the default production
+      - ASPNETCORE_URLS=http://+:80 # internal url that the AuctionService will run on. We'll access it with a different port
+      - RabbitMq__Host=rabbitmq # __ is used instead of : .... rabbitmq is the name of the above rabbitmq container
+      - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgrespw;Database=auctions
+      - IdentityServiceUrl=http://identity-svc
+    ports:
+     - 7001:80 # 7001 external, 80 internal. Each one of these services is given their own IP by docker, so we can reuse the same ports
+    depends_on:
+      - postgres
+      - rabbitmq
