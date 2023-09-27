@@ -1,30 +1,35 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import AuctionCard from './AuctionCard';
-import { Auction, PagedResult } from '@/types';
+import { Auction } from '@/types';
 import AppPagination from '../components/AppPagination';
+import { getData } from '../actions/auctionActions';
 
-// server side fetching. This will be called from our node.js server
-async function getData(): Promise<PagedResult<Auction>> {
-    // This fetch also caches
-    const res = await fetch("http://localhost:6001/search?pageSize=4");
+export default function Listings() {
+  const [auctions, setAuctions] = useState<Auction[]>([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
 
-    if(!res.ok) throw new Error('Failed to fetch data');
+  // will execute at least once when the component loads and when the pageNumber changes (due to the array in the 2nd param)
+  useEffect(() =>{
+    getData(pageNumber).then(data => {
+      setAuctions(data.results);
+      setPageCount(data.pageCount);
+    })
+  }, [pageNumber])
 
-    return res.json();
-}
-
-export default async function Listings() {
-    const data = await getData();
-
+  if(auctions.length === 0) return <h3>Loading...</h3>
+  
   return (
     <>
       <div className='grid grid-cols-4 gap-6'>
-          {data && data.results.map((auction) => (
+          {auctions.map((auction) => (
               <AuctionCard auction={auction} key={auction.id}/>
           ))}
       </div>
       <div className='flex justify-center mt-4'>
-        <AppPagination currentPage={1} pageCount={data.pageCount}/>
+        <AppPagination pageChanged={setPageNumber} currentPage={pageNumber} pageCount={pageCount}/>
       </div>
 
     </>
