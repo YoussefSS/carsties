@@ -1,8 +1,9 @@
 import React from 'react'
 import AuctionCard from './AuctionCard';
+import { Auction, PagedResult } from '@/types';
 
 // server side fetching. This will be called from our node.js server
-async function getData() {
+async function getData(): Promise<PagedResult<Auction>> {
     // This fetch also caches
     const res = await fetch("http://localhost:6001/search?pageSize=10");
 
@@ -16,7 +17,7 @@ export default async function Listings() {
 
   return (
     <div className='grid grid-cols-4 gap-6'>
-        {data && data.results.map((auction: any) => (
+        {data && data.results.map((auction) => (
             <AuctionCard auction={auction} key={auction.id}/>
         ))}
     </div>
