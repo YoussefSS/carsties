@@ -4,6 +4,11 @@ const nextConfig = {
         logging:{
             level: 'verbose',
         }
+    },
+    images: {
+        domains: [
+            'cdn.pixabay.com'
+        ]
     }
 }
  
