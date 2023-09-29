@@ -52,6 +52,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters.ValidateAudience = false;
         options.TokenValidationParameters.NameClaimType = "username";
     });
+// Same lifetime/scope as the DbContext
+builder.Services.AddScoped<IAuctionRepository, AuctionRespository>();
 
 var app = builder.Build();
 
