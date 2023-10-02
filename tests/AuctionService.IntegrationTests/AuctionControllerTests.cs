@@ -110,14 +110,13 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
     public async Task UpdateAuction_WithValidUpdateDtoAndUser_ShouldReturn200()
     {
         // arrange. 
-        var auction = GetAuctionForUpdate();
+        var auction = new UpdateAuctionDto { Make = "Updated" };
         _httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("bob"));
 
         // act
         var response = await _httpClient.PutAsJsonAsync($"api/auctions/{GT_ID}", auction);
 
         // assert
-        response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
@@ -125,7 +124,7 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
     public async Task UpdateAuction_WithValidUpdateDtoAndInvalidUser_ShouldReturn403()
     {
         // arrange. 
-        var auction = GetAuctionForUpdate();
+        var auction = new UpdateAuctionDto { Make = "Updated" };
         _httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("alice"));
 
         // act
@@ -159,16 +158,6 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
             Mileage = 10,
             Year = 2010,
             ReservePrice = 10
-        };
-    }
-
-    private UpdateAuctionDto GetAuctionForUpdate()
-    {
-        return new UpdateAuctionDto
-        {
-            Make = "updated",
-            Model = "updatedModel",
-            Color = "test"
         };
     }
 }
