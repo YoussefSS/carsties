@@ -148,7 +148,7 @@ public class AuctionControllerTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    private CreateAuctionDto GetAuctionForCreate()
+    private static CreateAuctionDto GetAuctionForCreate()
     {
         return new CreateAuctionDto
         {
