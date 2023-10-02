@@ -24,12 +24,7 @@ public class CustomWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetim
         builder.ConfigureTestServices(services =>
         {
             // DbContext: We must manually remove it before adding our test container
-
-            var descriptor = services.SingleOrDefault(d =>
-                d.ServiceType == typeof(DbContextOptions<AuctionDbContext>));
-
-            // Removing the already existing production database
-            if (descriptor != null) services.Remove(descriptor);
+            services.RemoveDbContext();
 
             // Replacing the production database with the test container
             services.AddDbContext<AuctionDbContext>(options =>
@@ -41,13 +36,7 @@ public class CustomWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetim
             services.AddMassTransitTestHarness();
 
             // Migrating: Setting up the test database with our schema
-            var sp = services.BuildServiceProvider();
-
-            using var scope = sp.CreateScope();
-            var scopedServices = scope.ServiceProvider;
-            var db = scopedServices.GetRequiredService<AuctionDbContext>();
-
-            db.Database.Migrate();
+            services.EnsureCreated();
         });
     }
 
