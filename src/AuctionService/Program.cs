@@ -54,6 +54,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 // Same lifetime/scope as the DbContext
 builder.Services.AddScoped<IAuctionRepository, AuctionRespository>();
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 
@@ -62,6 +63,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers(); // directs HTTP requests to the correct endpoint
+app.MapGrpcService<GrpcAuctionService>();
 
 try
 {
