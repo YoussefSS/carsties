@@ -32,7 +32,14 @@ public class BidsController : ControllerBase
         {
             auction = _grpcClient.GetAuction(auctionId);
 
-            if (auction == null) return BadRequest("Cannot accept bids on this auction at this time");
+            if (auction == null)
+            {
+                return BadRequest("Cannot accept bids on this auction at this time");
+            }
+            else
+            {
+                await DB.SaveAsync<Auction>(auction);
+            }
         }
 
         if (auction.Seller == User.Identity.Name)
